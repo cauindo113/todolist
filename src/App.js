@@ -19,34 +19,45 @@ export const App = () => {
   const [title, setTitle]=useState('');
   const [desc, setDesc]=useState('');
   const [date, setDate]=useState('');
-  const [piority, setpiority]=useState('');
+  const [piority, setpiority]=useState('Normal');
+  const [status, setStatus]=useState(false);
 
   // submit
   const handleAddSubmit=(e)=>{
-    // e.preventDefault();
+    e.preventDefault();
     // add
     let todo={
       id,
       title,
       desc,
       date,
-      piority
+      piority,
+      status
     }
     setTodos([...todos,todo]);
-    setId('');
+    setId((Math.random() + 1).toString(36).substring(7));
     setTitle('');
     setDesc('');
     setDate('');
-    setpiority('');
+    setpiority('Normal');
+    setStatus(false);
   }
 
   // delete
+  
   const deleteTodo=(id)=>{
+    if(window.confirm("Are you sure deleted ?")) {
     const filteredTodos=todos.filter((element,index)=>{
       return element.id !== id
-    })
-    setTodos(filteredTodos);
+    })   
+      setTodos(filteredTodos); 
   }
+}
+ const deleteAll = () => {
+  if(window.confirm("Are you sure delete all ?")) {
+  setTodos([])
+  }
+ }
 
   // lưu local
   useEffect(()=>{
@@ -58,7 +69,7 @@ export const App = () => {
       <div className='main d-flex justify-content-center'>
 
         <div className='form-container col-3'>
-        <h4>New Task</h4>
+        <h4 className='text-center'>New Task</h4>
           <form autoComplete="off"
  className='form-group'
           onSubmit={handleAddSubmit}>
@@ -76,8 +87,13 @@ export const App = () => {
             onChange={(e)=>setDate(e.target.value)} value={date}></input>
             <br></br>
             <label>piority</label>
-            <input type="text" className='form-control' required
-            onChange={(e)=>setpiority(e.target.value)} value={piority}></input>
+            <select className='form-control' required
+            onChange={(e)=>setpiority(e.target.value)} value={piority}>
+               <option value={"Normal"} selected>Normal</option>
+               <option value={"Medium"}>Medium</option>
+               <option value={"High"}>High</option>
+            </select>
+            <br/>
             
             <button type="submit" className='btn btn-success btn-md'>
               ADD
@@ -86,6 +102,7 @@ export const App = () => {
         </div>
 
         <div className='view-container'>
+        <h4 className='text-center'>To Do List</h4>
           {todos.length>0 && <>
             <div className='table-responsive'>
               <table className='table'>
@@ -99,14 +116,14 @@ export const App = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  <View todos={todos} deleteTodo={deleteTodo}/>
+                  <View todos={todos} setTodos={setTodos} deleteTodo={deleteTodo}/>
                 </tbody>
               </table>
             </div>
-            <button className='btn btn-danger btn-md'
-            onClick={()=>setTodos([])}>Remove All</button>
+            <button className='btn btn-danger'
+            onClick={()=>deleteAll()}>Remove All</button>
           </>}
-          {todos.length < 1 && <div>No books are added yet</div>}
+          {todos.length < 1 && <div>No list are added yet</div>}
         </div>
 
       </div>
